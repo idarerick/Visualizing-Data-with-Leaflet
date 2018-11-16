@@ -109,8 +109,9 @@ function createMap(earthquakes) {
 
 CreateLegend();
 
-function CreateLegend() {
-   var legend = L.control({position: 'bottomright'});
+function CreateLegend()
+   {
+   var legend = L.control({ position: "bottomright" });
 
    legend.onAdd = function() {
      var div = L.DomUtil.create("div", "info legend");
@@ -119,7 +120,7 @@ function CreateLegend() {
      //div.innerHTML = legendInfo;
 
      for(var i=0;i<labels.length;i++) {
-       legends.push("<li style=\"list-style-type:none;\"><div style=\"background-color: " + chooseColor(i) + "\">&nbsp;</div> "+
+       legends.push("<li style=\"list-style-type:none;\"><div style=\"background-color: " + getColor(i) + "\">&nbsp;</div> "+
                                                         "<div>"+ labels[i]+"</div></li>");
      }
 
