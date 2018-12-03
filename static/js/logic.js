@@ -19,48 +19,6 @@ function chooseColor(mag) {
 }
 
 
-var earthquakeLayer = L.geoJSON([], {
-	pointToLayer: function (feature, latlng) {
-		return L.circleMarker(latlng, {
-			stroke: false,
-			fillOpacity: 0.75,
-			color: "red",
-			//fillColor: "red",
-			fillColor: chooseColor(feature.properties.mag),
-			radius: feature.properties.mag*3
-		})
-	}
-}).bindPopup(function(layer){
-	return("<h3>" + layer.feature.properties.place +
-		"<h3><hr><p>" + layer.featuer.properties.mag + "</p><hr>" +
-		"</h3><p>" + new Date(layer.feature.properties.time) + "</p>"
-		);
-});
-
-// Perform a GET request to the query URL
-d3.json(queryURL,function(data) {
-	earthquakeLayer.addData(data.features)
-  // Once we get a response, send the data.features object to the createFeatures function
-  // createFeatures(data.features);
-});
-
-
-var faultlineURL = "https://github.com/fraxen/tectonicplates/blob/master/GeoJSON/PB2002_plates.json"
-var faultlineLayer = L.geoJSON([], {
-	style: function(feature) {
-		return {
-			color: "gray",
-			fill: false,
-			weight: 2
-		}
-  }
-});
-// }).bindPopup(function (layer) {
-
-// })
-
-
-
 function createMap(earthquakes) {
 
   // Define streetmap and darkmap layers
@@ -78,6 +36,46 @@ function createMap(earthquakes) {
     accessToken: API_KEY
   });
 
+  var earthquakeLayer = L.geoJSON([], {
+    pointToLayer: function (feature, latlng) {
+      console.log("test");
+      return L.circleMarker(latlng, {
+        stroke: false,
+        fillOpacity: 0.75,
+        color: "red",
+        //fillColor: "red",
+        fillColor: chooseColor(feature.properties.mag),
+        radius: feature.properties.mag*3
+      })
+    }
+  }).bindPopup(function(layer){
+    return("<h3>" + layer.feature.properties.place +
+      "<h3><hr><p>" + layer.feature.properties.mag + "</p><hr>" +
+      "</h3><p>" + new Date(layer.feature.properties.time) + "</p>"
+      );
+  });
+
+  // Perform a GET request to the query URL
+  d3.json(queryURL,function(data) {
+    earthquakeLayer.addData(data.features)
+    // Once we get a response, send the data.features object to the createFeatures function
+    // createFeatures(data.features);
+  });
+
+  var faultlineURL = "https://github.com/fraxen/tectonicplates/blob/master/GeoJSON/PB2002_plates.json"
+  var faultlineLayer = L.geoJSON([], {
+    style: function(feature) {
+      return {
+        color: "gray",
+        fill: false,
+        weight: 2
+      }
+    }
+  });
+  // }).bindPopup(function (layer) {
+
+  // })
+
   // Define a baseMaps object to hold our base layers
   var baseMaps = {
     "Street Map": streetmap,
@@ -87,7 +85,7 @@ function createMap(earthquakes) {
   // Create overlay object to hold our overlay layer
   var overlayMaps = {
     Earthquakes: earthquakeLayer,
-    Fautlines: fautlineLayer
+    Faultlines: faultlineLayer
   };
 
   // Create our map, giving it the streetmap and earthquakes layers to display on load
@@ -105,29 +103,38 @@ function createMap(earthquakes) {
   L.control.layers(baseMaps, overlayMaps, {
     collapsed: false
   }).addTo(myMap);
-}
+};
 
-CreateLegend();
 
-function CreateLegend()
-   {
-   var legend = L.control({ position: "bottomright" });
 
-   legend.onAdd = function() {
-     var div = L.DomUtil.create("div", "info legend");
-     var labels = ["0-1","1-2","2-3","3-4","4-5","5+"];
-     var legends = [];
-     //div.innerHTML = legendInfo;
 
-     for(var i=0;i<labels.length;i++) {
-       legends.push("<li style=\"list-style-type:none;\"><div style=\"background-color: " + getColor(i) + "\">&nbsp;</div> "+
-                                                        "<div>"+ labels[i]+"</div></li>");
-     }
 
-     div.innerHTML += "<ul class='legend'>" + legends.join("") + "</ul>";
-     return div;
-   };
 
-   // Adding legend to the map
-   legend.addTo(myMap);
-   }
+
+
+
+
+// CreateLegend();
+
+// function CreateLegend()
+//    {
+//    var legend = L.control({ position: "bottomright" });
+
+//    legend.onAdd = function() {
+//      var div = L.DomUtil.create("div", "info legend");
+//      var labels = ["0-1","1-2","2-3","3-4","4-5","5+"];
+//      var legends = [];
+//      //div.innerHTML = legendInfo;
+
+//      for(var i=0;i<labels.length;i++) {
+//        legends.push("<li style=\"list-style-type:none;\"><div style=\"background-color: " + chooseColor(i) + "\">&nbsp;</div> "+
+//                                                         "<div>"+ labels[i]+"</div></li>");
+//      }
+
+//      div.innerHTML += "<ul class='legend'>" + legends.join("") + "</ul>";
+//      return div;
+//    };
+
+//    // Adding legend to the map
+//    legend.addTo(myMap);
+//    }
